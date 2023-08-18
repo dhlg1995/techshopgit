@@ -4,6 +4,7 @@ using Infrastructure.Products;
 using Microsoft.AspNetCore.Mvc;
 using TechShop.Models;
 
+
 namespace TechShop.Controllers
 {
 	public class ProductController : Controller
@@ -50,6 +51,7 @@ namespace TechShop.Controllers
 		}
 		public IActionResult ReviewListPartial(bool _bool)
 		{
+			
 			var model = new ReviewFilterModel();
 			var rs = new List<ReviewModel>();
 			if (_bool == false)
@@ -62,6 +64,11 @@ namespace TechShop.Controllers
 
 			}
 			return PartialView(rs);
+		}
+		public IActionResult InsertReviews([FromBody] ReviewModel model)
+		{
+			_productService.InsertReview(model);
+			return Detail();
 		}
 
 	}
