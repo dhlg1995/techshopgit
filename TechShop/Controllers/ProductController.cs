@@ -49,10 +49,10 @@ namespace TechShop.Controllers
 			var result = _productService.SearchProduct(model);
 			return PartialView(result);
 		}
-		public IActionResult ReviewListPartial(bool _bool)
+		public IActionResult ReviewListPartial(bool _bool, [FromBody]ReviewFilterModel model)
 		{
 			
-			var model = new ReviewFilterModel();
+	
 			var rs = new List<ReviewModel>();
 			if (_bool == false)
 			{

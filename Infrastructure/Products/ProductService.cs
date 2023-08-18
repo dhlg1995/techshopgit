@@ -82,6 +82,7 @@ namespace Infrastructure.Products
 		}
 		public List<ReviewModel> GetReviewModels(Guid ProductId,ReviewFilterModel _model)
 		{
+			var lsRv = new List<ReviewModel>();
 			var filter = new ReviewFilterModel();
 			var rs = _context.Reviews.Where(s => s.ProductId == ProductId)
 				.Select(x => new ReviewModel
@@ -93,8 +94,9 @@ namespace Infrastructure.Products
 					Email = x.Email,
 					CreatedDate = x.CreatedDate
 				});
-			rs = rs.OrderByDescending(x=>x.Rating).Skip((_model.PageIndex - 1) * _model.PageSize).Take(_model.PageSize);
-			return rs.ToList();
+			rs = rs.OrderByDescending(x => x.Rating).Skip((_model.PageIndex - 1) * _model.PageSize).Take(_model.PageSize);
+			lsRv = rs.ToList();
+			return lsRv;
 		}
 
 		public List<ProductViewModel> SearchProduct(ProductFilterModel filter)
