@@ -16,6 +16,7 @@ namespace Infrastructure.Products
 		List<ReviewModel> GetReviewModels(Guid productId);
 		ProductDetailViewModel GetProductDetails(Guid productId);
         List<ProductViewModel> SearchProduct(ProductFilterModel filter);
+		int InsertReview(ReviewModel model);
 	}
 	public class ProductService : IProductService
 	{
@@ -77,10 +78,11 @@ namespace Infrastructure.Products
 					CreatedDate=x.CreatedDate
 				});
 			
-			return rs.ToList();
+			return rs.OrderByDescending(x => x.Rating).ToList();
 		}
 		public List<ReviewModel> GetReviewModels(Guid ProductId,ReviewFilterModel _model)
 		{
+			var lsRv = new List<ReviewModel>();
 			var filter = new ReviewFilterModel();
 			var rs = _context.Reviews.Where(s => s.ProductId == ProductId)
 				.Select(x => new ReviewModel
@@ -92,8 +94,9 @@ namespace Infrastructure.Products
 					Email = x.Email,
 					CreatedDate = x.CreatedDate
 				});
-			rs = rs.Skip((_model.PageIndex - 1) * _model.PageSize).Take(_model.PageSize);
-			return rs.ToList();
+			rs = rs.OrderByDescending(x => x.Rating).Skip((_model.PageIndex - 1) * _model.PageSize).Take(_model.PageSize);
+			lsRv = rs.ToList();
+			return lsRv;
 		}
 
 		public List<ProductViewModel> SearchProduct(ProductFilterModel filter)
@@ -159,6 +162,21 @@ namespace Infrastructure.Products
 				item.Rating = rating;
 			}
 			return productViewModels;
+		}
+
+		public int InsertReview(ReviewModel model)
+		{
+			var review = new Review();
+			review.Id = new Guid();
+			review.Content = model.Content;			
+			review.Email = model.Email;
+			review.ReviewerName = model.ReviewerName;
+			review.Rating = model.Rating;
+			review.ProductId = model.ProductId;
+			review.CreatedDate = DateTime.Now;
+			_context.Reviews.Add(review);
+			_context.SaveChanges();
+			return 200;
 		}
 	}
 }

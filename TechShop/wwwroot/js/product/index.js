@@ -53,7 +53,7 @@ function changePageSize() {
     loadProduct(_model)
 }
 
-function loadMore() {
+function loadMore() {   
     _model.PageIndex += 1;
     loadProduct(_model, true)
 }

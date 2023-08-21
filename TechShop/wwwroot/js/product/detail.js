@@ -13,7 +13,7 @@ console.log(grstar4)
 console.log(grstar5)
 
 
-loadReviews(model);
+
 startFill(a);
 
 
@@ -30,10 +30,12 @@ $("#1startbar").css({ "width": progressStar(grstar1) })
     return  grbarpercent
 }
 
-var model = new Object();
-model.PageSize = 5;
-model.PageIndex = 1;
+var modelrv = new Object();
+modelrv.PageSize = 5;
+modelrv.PageIndex = 1;
 var countLoadAll = 0;
+var rvModel = new Object();
+loadReviews(modelrv);
 function loadReviews(model, isLoadMore = false) {
     $.ajax({
         type: 'post',
@@ -49,14 +51,25 @@ function loadReviews(model, isLoadMore = false) {
             }
         }
     });
-}
-function loadAllReviews() {
+}function loadAllReviews() {
     $.ajax({
         type: 'get',
         url: '/product/ReviewListPartial?_bool=true',        
         contentType: "application/json; charset=utf-8",
         success: function (response) {           
                 $("#reviews").html(response);
+        }
+    });
+}
+function submitReview(model) {
+   
+    $.ajax({
+        type: 'post',
+        url: '/product/InsertReviews',
+        data: JSON.stringify(model),
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+           window.location.href="/product/detail"
         }
     });
 }
@@ -115,14 +128,15 @@ function startFill(_rate) {
 
 
 function loadMoreReview() {
-    model.PageIndex = model.PageIndex + 1;
-    loadReviews(model,true);
+    console.log("index" + modelrv.PageIndex);
+    modelrv.PageIndex = modelrv.PageIndex + 1;
+    loadReviews(modelrv,true);
 }
 function loadAllRv() {
     switch (countLoadAll) {
         case 1:
-            model.PageIndex = 1;
-            loadReviews(model);
+            modelrv.PageIndex = 1;
+            loadReviews(modelrv);
             countLoadAll = 0;
             break;
         case 0:
@@ -133,6 +147,19 @@ function loadAllRv() {
             break;
     }  
 }
+function insertReview() {   
+    rvModel.ProductId = $("#rv-producid").val();
+    rvModel.ReviewerName = $("#rv-name").val();
+    rvModel.Email = $("#rv-email").val();
+    rvModel.Content = $("#rv-txt").val();
+    if ($("#star1").is(":checked") == true) rvModel.Rating = "1";
+    if ($("#star2").is(":checked") == true) rvModel.Rating = "2";
+    if ($("#star3").is(":checked") == true) rvModel.Rating = "3";
+    if ($("#star4").is(":checked") == true) rvModel.Rating = "4";
+    if ($("#star5").is(":checked") == true) rvModel.Rating = "5";
+    submitReview(rvModel);
+}
 $("body").on("click", "#btn-rv-loadmore", loadMoreReview);
 $("body").on("click", "#btn-rv-loadall", loadAllRv);
+$("body").on("click","#btn-submit", insertReview)
 
