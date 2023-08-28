@@ -21,23 +21,25 @@ namespace TechShop.Controllers
 
         public IActionResult AddToCart(ProductViewModel product)
         {
-            var rs = "";
-            CartViewModel cart ;
-            if (product == null) rs = "Product is not found!";
-            else if (product != null)
-            {
-                cart = new CartViewModel()
-                {
-                    ProductId = product.Id,
-                    ImageLink = product.Image,
-                    Price = product.Price,
-                    Quantity= product.Quantity
+            //var rs = "";
+            //CartViewModel cart ;
+            //if (product == null) return Json("Product is not found"); 
+            //else if (product != null)
+            //{
+            //    cart = new CartViewModel()
+            //    {
+            //        ProductId = product.Id,
+            //        ImageLink = product.Image,
+            //        Price = product.Price,
+            //        Quantity= product.Quantity
+            //    };
+            //}
+            //if (cart == null)
+            //{
 
-                };
-            }
+            //}
 
-
-            return Json();
+            return View();
         }
 
     }
